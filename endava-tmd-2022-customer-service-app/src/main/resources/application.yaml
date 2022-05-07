@@ -1,0 +1,32 @@
+# If this file seems strange to you, you can start with some intro: https://www.youtube.com/playlist?list=PLqq-6Pq4lTTaoaVoQVfRJPqvNTCjcTvJB
+
+spring:
+  application:
+    name: app-customer-service
+  profiles:
+    active:
+    - ${ENV:local}
+
+server:
+  port: ${APP_PORT:9010}
+  servlet:
+    context-path: /${spring.application.name}
+
+# Spring Boot Actuator
+# https://youtu.be/z8kfFbfGGME?t=436
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+
+logging:
+  level:
+    root: ${ROOT_LOGGING_LEVEL:INFO}
+    com.endava: ${ENDAVA_LOGGING_LEVEL:DEBUG}
+  pattern:
+    dateformat: yyyy-MM-dd HH:mm:ss.SSS
+    console: "%d [%-16thread] %-5level  %logger{36} - %msg%n"

@@ -1,0 +1,9 @@
+spring.main.banner-mode: off
+
+# do not forget that the settings below happen only after the spring banner is (supposed to be) displayed
+# https://stackoverflow.com/q/53420179/2032694
+logging:
+  level:
+    root: info
+    com.endava: debug
+#  file.path: ${user.home}
