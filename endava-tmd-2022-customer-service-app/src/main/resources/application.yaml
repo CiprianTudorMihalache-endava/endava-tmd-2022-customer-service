@@ -27,6 +27,7 @@ logging:
   level:
     root: ${ROOT_LOGGING_LEVEL:INFO}
     com.endava: ${ENDAVA_LOGGING_LEVEL:DEBUG}
+    org.springframework.web.filter.CommonsRequestLoggingFilter: DEBUG
   pattern:
     dateformat: yyyy-MM-dd HH:mm:ss.SSS
     console: "%d [%-16thread] %-5level  %logger{36} - %msg%n"
