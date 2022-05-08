@@ -12,6 +12,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import com.endava.tmd.customer.swg.model.CreateCustomerRequest;
 import com.endava.tmd.customer.swg.model.CreateCustomerResponse;
+import com.endava.tmd.customer.test.util.TestConstants;
 
 @ActiveProfiles("it")
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -30,5 +31,7 @@ class CreateCustomerIT { // Note the name of the test class, it is not a standar
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         assertThat(response.getBody().getMessage()).isEqualTo("Customer created successfully");
+        assertThat(response.getBody().getTraceId()).isNotBlank();
+        assertThat(response.getBody().getBuildVersion()).isEqualTo(TestConstants.BUILD_VERSION);
     }
 }
