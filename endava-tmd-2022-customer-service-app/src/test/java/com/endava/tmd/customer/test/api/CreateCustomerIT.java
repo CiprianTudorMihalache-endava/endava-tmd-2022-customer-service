@@ -31,4 +31,24 @@ class CreateCustomerIT { // Note the name of the test class, it is not a standar
         assertThat(response.getBody().getTraceId()).isNotBlank();
         assertThat(response.getBody().getBuildVersion()).isEqualTo(TestConstants.BUILD_VERSION);
     }
+
+    @Test
+    void failedValidationWhenCreatingACustomer() {
+        final var request = new CreateCustomerRequest()
+                .setLastName("Pan");
+        final var response = restTemplate.postForEntity("/v1/customers", request, String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(response.getBody()).matches(
+                """
+                        \\{\
+                        "timestamp":"\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}\\+\\d{2}:\\d{2}",\
+                        "status":400,\
+                        "error":"Bad Request",\
+                        "path":"\\/app-customer-service\\/v1\\/customers"\
+                        \\}""");
+        // How to report the problem to the caller?
+        // Where does the client take the trace id?
+    }
+
 }
