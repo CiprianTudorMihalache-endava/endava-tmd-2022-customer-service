@@ -203,6 +203,50 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Retrieve Customer",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"firstName\": \"James\",\r\n    \"lastName\": \"Bond\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{APP_URL}}/v1/customers/1",
+					"host": [
+						"{{APP_URL}}"
+					],
+					"path": [
+						"v1",
+						"customers",
+						"1"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"event": [

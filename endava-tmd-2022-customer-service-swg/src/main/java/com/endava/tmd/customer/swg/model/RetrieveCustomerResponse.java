@@ -3,10 +3,11 @@ package com.endava.tmd.customer.swg.model;
 import lombok.Data;
 
 @Data
-public class CreateCustomerResponse {
+public class RetrieveCustomerResponse {
     private String message;
     private String traceId;
     private String buildVersion;
 
-    private Long customerId;
+    private String firstName;
+    private String lastName;
 }
