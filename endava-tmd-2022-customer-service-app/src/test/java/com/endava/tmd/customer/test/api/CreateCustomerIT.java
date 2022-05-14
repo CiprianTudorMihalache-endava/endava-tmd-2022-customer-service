@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 
 import com.endava.tmd.customer.swg.model.CreateCustomerRequest;
 import com.endava.tmd.customer.swg.model.CreateCustomerResponse;
+import com.endava.tmd.customer.swg.model.base.AdditionalInfo;
 import com.endava.tmd.customer.test.util.IntegrationTest;
 import com.endava.tmd.customer.test.util.TestConstants;
 
@@ -27,7 +28,8 @@ class CreateCustomerIT { // Note the name of the test class, it is not a standar
         final var response = restTemplate.postForEntity("/v1/customers", request, CreateCustomerResponse.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-        assertThat(response.getBody().getMessage()).isEqualTo("Customer created successfully");
+        assertThat(response.getBody().getAdditionalInfo()).singleElement()
+                .extracting(AdditionalInfo::getMessage).isEqualTo("Customer created successfully");
         assertThat(response.getBody().getTraceId()).isNotBlank();
         assertThat(response.getBody().getBuildVersion()).isEqualTo(TestConstants.BUILD_VERSION);
     }

@@ -8,6 +8,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 
 import com.endava.tmd.customer.swg.model.RetrieveCustomerResponse;
+import com.endava.tmd.customer.swg.model.base.AdditionalInfo;
 import com.endava.tmd.customer.test.util.IntegrationTest;
 import com.endava.tmd.customer.test.util.TestConstants;
 
@@ -22,7 +23,8 @@ class RetrieveCustomerIT {
         final var response = restTemplate.getForEntity("/v1/customers/10", RetrieveCustomerResponse.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-        assertThat(response.getBody().getMessage()).isEqualTo("Cannot find customer with id = 10");
+        assertThat(response.getBody().getAdditionalInfo()).singleElement()
+                .extracting(AdditionalInfo::getMessage).isEqualTo("Cannot find customer with id = 10");
         assertThat(response.getBody().getTraceId()).isNotBlank();
         assertThat(response.getBody().getBuildVersion()).isEqualTo(TestConstants.BUILD_VERSION);
     }

@@ -1,13 +1,9 @@
 package com.endava.tmd.customer.swg.model;
 
-import lombok.Data;
+import com.endava.tmd.customer.swg.model.base.ParentResponse;
 
-@Data
-public class RetrieveCustomerResponse {
-    private String message;
-    private String traceId;
-    private String buildVersion;
+import lombok.ToString;
 
-    private String firstName;
-    private String lastName;
+@ToString(callSuper = true)
+public class RetrieveCustomerResponse extends ParentResponse<RetrieveCustomerResponse, RetrieveCustomerResult> {
 }
