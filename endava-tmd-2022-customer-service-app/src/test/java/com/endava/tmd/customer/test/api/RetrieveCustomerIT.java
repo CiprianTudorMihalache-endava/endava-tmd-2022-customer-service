@@ -3,47 +3,29 @@ package com.endava.tmd.customer.test.api;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import com.endava.tmd.customer.swg.model.RetrieveCustomerResponse;
-import com.endava.tmd.customer.swg.model.base.AdditionalInfo;
-import com.endava.tmd.customer.test.util.IntegrationTest;
-import com.endava.tmd.customer.test.util.TestConstants;
 
-@IntegrationTest
-class RetrieveCustomerIT {
-
-    @Autowired
-    private TestRestTemplate restTemplate;
+class RetrieveCustomerIT extends ApiIntegrationTest {
 
     @Test
     void retrieveInexistentCustomer() {
-        final var response = restTemplate.getForEntity("/v1/customers/10", RetrieveCustomerResponse.class);
-
+        final var response = retrieveCustomer(10);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-        assertThat(response.getBody().getAdditionalInfo()).singleElement()
-                .extracting(AdditionalInfo::getMessage).isEqualTo("Cannot find customer with id = 10");
-        assertThat(response.getBody().getTraceId()).isNotBlank();
-        assertThat(response.getBody().getBuildVersion()).isEqualTo(TestConstants.BUILD_VERSION);
+        assertResponse(response.getBody(), "Cannot find customer with id = 10");
     }
 
     @Test
     void failedValidationWhenRetrievingACustomer() {
-        final var response = restTemplate.getForEntity("/v1/customers/0", String.class);
+        final var response = retrieveCustomer(-1);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertResponse(response.getBody(), "customerId fails constraint validation: must be greater than or equal to 1");
+    }
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR); // !!!
-        assertThat(response.getBody()).matches(
-                """
-                        \\{\
-                        "timestamp":"\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}\\+\\d{2}:\\d{2}",\
-                        "status":500,\
-                        "error":"Internal Server Error",\
-                        "path":"\\/app-customer-service\\/v1\\/customers\\/0"\
-                        \\}""");
-        // How to report the problem to the caller?
-        // Where does the client take the trace id?
+    private ResponseEntity<RetrieveCustomerResponse> retrieveCustomer(final long customerId) {
+        return getRestTemplate().getForEntity("/v1/customers/{id}", RetrieveCustomerResponse.class, customerId);
     }
 
 }

@@ -2,55 +2,44 @@ package com.endava.tmd.customer.test.api;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import com.endava.tmd.customer.swg.model.CreateCustomerRequest;
 import com.endava.tmd.customer.swg.model.CreateCustomerResponse;
-import com.endava.tmd.customer.swg.model.base.AdditionalInfo;
-import com.endava.tmd.customer.test.util.IntegrationTest;
-import com.endava.tmd.customer.test.util.TestConstants;
+import com.endava.tmd.customer.swg.model.CreateCustomerResult;
 
-@IntegrationTest
-class CreateCustomerIT { // Note the name of the test class, it is not a standard surefire detected test class
-
-    // MockMvc vs TestRestTemplate vs WebTestClient vs RestAssured (RestAssuredMockMvc | RestAssuredWebTestClient)
-    @Autowired
-    private TestRestTemplate restTemplate;
+class CreateCustomerIT extends ApiIntegrationTest {
 
     @Test
     void successfullyCreateACustomer() {
         final var request = new CreateCustomerRequest()
                 .setFirstName("Peter")
                 .setLastName("Pan");
-        final var response = restTemplate.postForEntity("/v1/customers", request, CreateCustomerResponse.class);
+        final var expectedResult = new CreateCustomerResult().setCustomerId(1L);
+
+        final var response = createCustomer(request);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-        assertThat(response.getBody().getAdditionalInfo()).singleElement()
-                .extracting(AdditionalInfo::getMessage).isEqualTo("Customer created successfully");
-        assertThat(response.getBody().getTraceId()).isNotBlank();
-        assertThat(response.getBody().getBuildVersion()).isEqualTo(TestConstants.BUILD_VERSION);
+        assertResponse(response.getBody(), "Customer created successfully", expectedResult);
     }
 
     @Test
     void failedValidationWhenCreatingACustomer() {
         final var request = new CreateCustomerRequest()
-                .setLastName("Pan");
-        final var response = restTemplate.postForEntity("/v1/customers", request, String.class);
+                .setLastName("x".repeat(51));
+
+        final var response = createCustomer(request);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-        assertThat(response.getBody()).matches(
-                """
-                        \\{\
-                        "timestamp":"\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}\\+\\d{2}:\\d{2}",\
-                        "status":400,\
-                        "error":"Bad Request",\
-                        "path":"\\/app-customer-service\\/v1\\/customers"\
-                        \\}""");
-        // How to report the problem to the caller?
-        // Where does the client take the trace id?
+        assertResponse(response.getBody(), List.of("firstName must not be blank", "lastName size must be between 0 and 50"));
+    }
+
+    private ResponseEntity<CreateCustomerResponse> createCustomer(final CreateCustomerRequest request) {
+        return getRestTemplate().postForEntity("/v1/customers", request, CreateCustomerResponse.class);
     }
 
 }

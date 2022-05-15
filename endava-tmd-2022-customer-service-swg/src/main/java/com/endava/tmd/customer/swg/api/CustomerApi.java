@@ -2,6 +2,7 @@ package com.endava.tmd.customer.swg.api;
 
 import javax.validation.constraints.Min;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +21,12 @@ public interface CustomerApi {
     // We could validate it using the @Validated annotation with the same effect
 
     @GetMapping(value = "/v1/customers/{customerId}", produces = {"application/json"})
-    ResponseEntity<RetrieveCustomerResponse> retrieveCustomer(@PathVariable("customerId") @Min(value = 1,
-            message = "customerId must be greater than or equal to 1") long customerId);
+    default ResponseEntity<RetrieveCustomerResponse> retrieveCustomer(@PathVariable("customerId") @Min(1) final long customerId) {
+        // it is still a mystery to me that the default method definition produces correct attribute name in the
+        // ConstraintViolationException, but the normal interface abstract method produce the name "arg0"
+        // I wonder if it has anything to do with:
+        // https://docs.jboss.org/hibernate/stable/validator/reference/en-US/html_single/#section-parameter-name-provider
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+    }
 
 }
