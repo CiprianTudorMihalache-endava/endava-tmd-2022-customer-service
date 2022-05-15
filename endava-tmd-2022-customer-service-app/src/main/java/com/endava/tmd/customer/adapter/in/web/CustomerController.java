@@ -45,7 +45,8 @@ public class CustomerController implements CustomerApi {
         final var customer = customers.get((int) customerId - 1);
         final var result = new RetrieveCustomerResult()
                 .setFirstName(customer.getFirstName())
-                .setLastName(customer.getLastName());
+                .setLastName(customer.getLastName())
+                .setDateOfBirth(customer.getDateOfBirth());
         final var response = responseFactory.build(RetrieveCustomerResponse::new, "Retrieve operation was successfully processed",
                 result);
         // this form is not so powerful

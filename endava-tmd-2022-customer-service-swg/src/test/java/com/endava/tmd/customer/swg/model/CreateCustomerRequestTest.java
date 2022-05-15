@@ -2,6 +2,7 @@ package com.endava.tmd.customer.swg.model;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.time.LocalDate;
 import java.util.function.Function;
 
 import javax.validation.ConstraintViolation;
@@ -23,14 +24,13 @@ class CreateCustomerRequestTest {
 
     @Test
     void validRequest() {
-        final var request = new CreateCustomerRequest()
-                .setFirstName("Peter");
+        final var request = validCreateCustomerRequest();
         assertThat(validator.validate(request)).isEmpty();
     }
 
     @Test
     void emptyFirstName() {
-        final var request = new CreateCustomerRequest()
+        final var request = validCreateCustomerRequest()
                 .setFirstName("");
         assertThat(validator.validate(request))
                 .map(extractMessage())
@@ -41,7 +41,7 @@ class CreateCustomerRequestTest {
     @NullSource
     @ValueSource(strings = {" ", "   ", "\t", "\n"})
     void blankFirstName(final String firstName) {
-        final var request = new CreateCustomerRequest()
+        final var request = validCreateCustomerRequest()
                 .setFirstName(firstName);
         assertThat(validator.validate(request)).singleElement()
                 .extracting(extractMessage())
@@ -50,7 +50,7 @@ class CreateCustomerRequestTest {
 
     @Test
     void tooLargeFirstName() {
-        final var request = new CreateCustomerRequest()
+        final var request = validCreateCustomerRequest()
                 .setFirstName("x".repeat(51));
         assertThat(validator.validate(request)).singleElement()
                 .extracting(extractMessage())
@@ -59,16 +59,31 @@ class CreateCustomerRequestTest {
 
     @Test
     void tooLargeLastName() {
-        final var request = new CreateCustomerRequest()
-                .setFirstName("Peter")
+        final var request = validCreateCustomerRequest()
                 .setLastName("x".repeat(51));
         assertThat(validator.validate(request)).singleElement()
                 .extracting(extractMessage())
                 .isEqualTo("lastName size must be between 0 and 50");
     }
 
+    @Test
+    void tooYoung() {
+        final var request = validCreateCustomerRequest()
+                .setDateOfBirth(LocalDate.now().minusYears(18).plusDays(1));
+        assertThat(validator.validate(request)).singleElement()
+                .extracting(extractMessage())
+                .isEqualTo("dateOfBirth value must be older or equal than 18 years in the past");
+    }
+
     private Function<? super ConstraintViolation<CreateCustomerRequest>, String> extractMessage() {
         return cv -> String.join(" ", cv.getPropertyPath().toString(), cv.getMessage());
+    }
+
+    private CreateCustomerRequest validCreateCustomerRequest() {
+        return new CreateCustomerRequest()
+                .setFirstName("Peter")
+                .setLastName("Pan")
+                .setDateOfBirth(LocalDate.now().minusYears(18));
     }
 
 }

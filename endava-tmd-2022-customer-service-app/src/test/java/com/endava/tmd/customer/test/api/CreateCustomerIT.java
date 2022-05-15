@@ -2,6 +2,7 @@ package com.endava.tmd.customer.test.api;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -18,7 +19,8 @@ class CreateCustomerIT extends ApiIntegrationTest {
     void successfullyCreateACustomer() {
         final var request = new CreateCustomerRequest()
                 .setFirstName("Peter")
-                .setLastName("Pan");
+                .setLastName("Pan")
+                .setDateOfBirth(LocalDate.parse("2000-11-22"));
         final var expectedResult = new CreateCustomerResult().setCustomerId(1L);
 
         final var response = createCustomer(request);
@@ -35,7 +37,8 @@ class CreateCustomerIT extends ApiIntegrationTest {
         final var response = createCustomer(request);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-        assertResponse(response.getBody(), List.of("firstName must not be blank", "lastName size must be between 0 and 50"));
+        assertResponse(response.getBody(), List.of("firstName must not be blank", "lastName size must be between 0 and 50",
+                "dateOfBirth value must be older or equal than 18 years in the past"));
     }
 
     private ResponseEntity<CreateCustomerResponse> createCustomer(final CreateCustomerRequest request) {

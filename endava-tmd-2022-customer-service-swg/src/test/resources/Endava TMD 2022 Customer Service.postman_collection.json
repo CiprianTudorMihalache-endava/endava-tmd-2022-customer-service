@@ -184,7 +184,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"firstName\": \"James\",\r\n    \"lastName\": \"Bond\"\r\n}",
+					"raw": "{\r\n    \"firstName\": \"James\",\r\n    \"lastName\": \"Bond\",\r\n    \"dateOfBirth\": \"2002-02-20\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"

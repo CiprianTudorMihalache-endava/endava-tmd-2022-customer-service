@@ -1,7 +1,11 @@
 package com.endava.tmd.customer.swg.model;
 
+import java.time.LocalDate;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+
+import com.endava.tmd.customer.swg.annotation.MinYears;
 
 import lombok.Data;
 
@@ -16,4 +20,6 @@ public class CreateCustomerRequest {
     @Size(max = 50)
     private String lastName;
 
+    @MinYears(18)
+    private LocalDate dateOfBirth;
 }
