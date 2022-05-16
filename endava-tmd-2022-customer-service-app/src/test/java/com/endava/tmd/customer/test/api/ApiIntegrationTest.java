@@ -9,13 +9,13 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 
 import com.endava.tmd.customer.swg.model.base.AdditionalInfo;
 import com.endava.tmd.customer.swg.model.base.ParentResponse;
-import com.endava.tmd.customer.test.util.IntegrationTest;
+import com.endava.tmd.customer.test.util.IntegrationWebTest;
 import com.endava.tmd.customer.test.util.TestConstants;
 
 import lombok.Getter;
 
 @Getter
-@IntegrationTest
+@IntegrationWebTest
 abstract class ApiIntegrationTest {
 
     @Autowired

@@ -35,3 +35,12 @@ logging:
 logbook:
   exclude:
     - ${server.servlet.context-path}/actuator/health
+
+application:
+  name: ${spring.application.name}
+  description: The implementation of the Customer Service API
+  license: MIT License
+  license-url: https://choosealicense.com/licenses/mit/
+  contact-name: Endava
+  contact-url: https://www.endava.com/en/About/Locations/Central-Europe/Timisoara
+  contact-mail: developer.tmd@endava.com

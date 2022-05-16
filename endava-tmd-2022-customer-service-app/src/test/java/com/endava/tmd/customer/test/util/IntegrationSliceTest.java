@@ -14,7 +14,7 @@ import org.springframework.test.context.ActiveProfiles;
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @ActiveProfiles("it")
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest
 @ExtendWith(TestExecutionLogger.class)
-public @interface IntegrationTest {
+public @interface IntegrationSliceTest {
 }

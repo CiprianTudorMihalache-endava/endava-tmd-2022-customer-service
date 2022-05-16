@@ -7,3 +7,12 @@ logging:
     root: info
     com.endava: debug
 #  file.path: ${user.home}
+
+application:
+  name: myApp
+  description: The implementation of myApp
+  license: myLicense
+  license-url: https://myCompany.com/license
+  contact-name: myCompany
+  contact-url: https://www.myCompany.com
+  contact-mail: developer@myCompany.com
