@@ -44,3 +44,16 @@ application:
   contact-name: Endava
   contact-url: https://www.endava.com/en/About/Locations/Central-Europe/Timisoara
   contact-mail: developer.tmd@endava.com
+
+springdoc:
+  version: '@springdoc.version@'
+  swagger-ui:
+    display-request-duration: true
+    groups-order: DESC
+    operationsSorter: method
+    disable-swagger-default-url: true
+    use-root-path: true
+  show-actuator: true
+  group-configs:
+    - group: customer
+      paths-to-match: /v1/**

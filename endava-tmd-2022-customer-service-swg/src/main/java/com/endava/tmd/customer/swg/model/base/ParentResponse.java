@@ -3,6 +3,7 @@ package com.endava.tmd.customer.swg.model.base;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
@@ -12,9 +13,16 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 public abstract class ParentResponse<T, R> {
+    @Schema(description = "The application build version", example = "1.2.3-SNAPSHOT")
     private String buildVersion;
+
+    @Schema(description = "The identifier of the request", example = "9e517fa3682c82ed")
     private String traceId;
+
+    @Schema(description = "Any info the server returns, additional to the result(s)")
     private List<AdditionalInfo> additionalInfo = new ArrayList<>();
+
+    @Schema(description = "The result(s) from the operation")
     private List<R> results = new ArrayList<>();
 
     public T setBuildVersion(final String buildVersion) {
