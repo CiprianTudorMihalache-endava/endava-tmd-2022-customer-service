@@ -35,6 +35,8 @@ logging:
 logbook:
   exclude:
     - ${server.servlet.context-path}/actuator/health
+    - ${server.servlet.context-path}/swagger-ui/*
+    - ${server.servlet.context-path}/v3/api-docs/*
 
 application:
   name: ${spring.application.name}

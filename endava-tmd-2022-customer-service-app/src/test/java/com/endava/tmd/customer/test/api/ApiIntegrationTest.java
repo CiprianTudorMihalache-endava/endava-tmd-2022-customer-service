@@ -18,6 +18,11 @@ import lombok.Getter;
 @IntegrationWebTest
 abstract class ApiIntegrationTest {
 
+    // These test executions could be documented using spring-restdocs library
+    // https://docs.spring.io/spring-restdocs/docs/current/reference/html5/
+    // Difference vs springdoc/OpenAPI: https://springframework.guru/should-i-use-spring-rest-docs-or-openapi/
+    // Other example: https://www.baeldung.com/spring-rest-docs
+
     @Autowired
     private TestRestTemplate restTemplate;
 
