@@ -8,14 +8,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.endava.tmd.customer.core.converter.CreateCustomerRequestToCustomerConverter;
+import com.endava.tmd.customer.core.converter.CustomerToRetrieveCustomerResultConverter;
 import com.endava.tmd.customer.core.exception.RetrieveCustomerException;
 import com.endava.tmd.customer.core.factory.ResponseFactory;
+import com.endava.tmd.customer.model.Customer;
 import com.endava.tmd.customer.swg.api.CustomerApi;
 import com.endava.tmd.customer.swg.model.CreateCustomerRequest;
 import com.endava.tmd.customer.swg.model.CreateCustomerResponse;
 import com.endava.tmd.customer.swg.model.CreateCustomerResult;
 import com.endava.tmd.customer.swg.model.RetrieveCustomerResponse;
-import com.endava.tmd.customer.swg.model.RetrieveCustomerResult;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,12 +28,14 @@ import lombok.extern.slf4j.Slf4j;
 @Validated
 public class CustomerController implements CustomerApi {
     private final ResponseFactory responseFactory;
-    private List<CreateCustomerRequest> customers = new ArrayList<>();
+    private final CreateCustomerRequestToCustomerConverter requestToModelConverter;
+    private final CustomerToRetrieveCustomerResultConverter modelToResponseConverter;
+    private List<Customer> customers = new ArrayList<>();
 
     @Override
     public ResponseEntity<CreateCustomerResponse> createCustomer(final CreateCustomerRequest request) {
         log.info("Attempting to create customer: {}", request);
-        customers.add(request);
+        customers.add(requestToModelConverter.convert(request));
         final var result = new CreateCustomerResult().setCustomerId((long) customers.size());
         final var response = responseFactory.build(CreateCustomerResponse::new, "Customer created successfully", result);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
@@ -43,14 +47,9 @@ public class CustomerController implements CustomerApi {
             throw new RetrieveCustomerException(customerId);
         }
         final var customer = customers.get((int) customerId - 1);
-        final var result = new RetrieveCustomerResult()
-                .setFirstName(customer.getFirstName())
-                .setLastName(customer.getLastName())
-                .setDateOfBirth(customer.getDateOfBirth());
+        final var result = modelToResponseConverter.convert(customer);
         final var response = responseFactory.build(RetrieveCustomerResponse::new, "Retrieve operation was successfully processed",
                 result);
-        // this form is not so powerful
-        // it cannot be used to return a 404 NOT FOUND with a body
         return ResponseEntity.ok(response);
     }
 

@@ -2,7 +2,6 @@ package com.endava.tmd.customer.test.api;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -12,15 +11,13 @@ import org.springframework.http.ResponseEntity;
 import com.endava.tmd.customer.swg.model.CreateCustomerRequest;
 import com.endava.tmd.customer.swg.model.CreateCustomerResponse;
 import com.endava.tmd.customer.swg.model.CreateCustomerResult;
+import com.endava.tmd.customer.test.util.mother.swagger.CreateCustomerRequestMother;
 
 class CreateCustomerIT extends ApiIntegrationTest {
 
     @Test
     void successfullyCreateACustomer() {
-        final var request = new CreateCustomerRequest()
-                .setFirstName("Peter")
-                .setLastName("Pan")
-                .setDateOfBirth(LocalDate.parse("2000-11-22"));
+        final var request = CreateCustomerRequestMother.peterPan();
         final var expectedResult = new CreateCustomerResult().setCustomerId(1L);
 
         final var response = createCustomer(request);
