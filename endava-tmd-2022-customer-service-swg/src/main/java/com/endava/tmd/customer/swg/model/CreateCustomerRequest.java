@@ -1,6 +1,8 @@
 package com.endava.tmd.customer.swg.model;
 
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -27,4 +29,8 @@ public class CreateCustomerRequest {
     @MinYears(18)
     @Schema(description = "Birth date of the customer", example = "1980-07-20")
     private LocalDate dateOfBirth;
+
+    @Schema(description = "Security questions")
+    private Map<String, String> securityQuestions = new HashMap<>();
+
 }

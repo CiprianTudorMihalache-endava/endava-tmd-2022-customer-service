@@ -1,6 +1,8 @@
 package com.endava.tmd.customer.swg.model;
 
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -15,4 +17,7 @@ public class RetrieveCustomerResult {
 
     @Schema(description = "Birth date of the customer", example = "1980-07-20")
     private LocalDate dateOfBirth;
+
+    @Schema(description = "Security questions")
+    private Map<String, String> securityQuestions = new HashMap<>();
 }

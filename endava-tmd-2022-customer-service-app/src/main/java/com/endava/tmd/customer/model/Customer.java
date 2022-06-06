@@ -1,6 +1,8 @@
 package com.endava.tmd.customer.model;
 
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 
 import lombok.Data;
 
@@ -10,4 +12,5 @@ public class Customer {
     private String firstName;
     private String lastName;
     private LocalDate dateOfBirth;
+    private Map<String, String> securityQuestions = new HashMap<>();
 }
