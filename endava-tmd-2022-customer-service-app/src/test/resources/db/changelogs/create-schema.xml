@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet author="Ciprian Mihalache" id="create_schema_in_integration_tests" dbms="postgresql">
+        <sql>
+            CREATE SCHEMA ${owner_name};
+            CREATE ROLE ${user_name} WITH PASSWORD 'pass' LOGIN;
+            ALTER ROLE ${user_name} SET search_path TO ${owner_name};
+            GRANT USAGE ON SCHEMA ${owner_name} TO ${user_name};
+        </sql>
+        <rollback>
+            <sql>
+                DROP SCHEMA ${owner_name};
+            </sql>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

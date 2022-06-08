@@ -1,4 +1,26 @@
-spring.main.banner-mode: off
+spring:
+  datasource:
+    url: jdbc:postgresql://
+    username: customer_service_it_user
+    password: 
+  jpa:
+    properties:
+      hibernate:
+        default_schema: customer_service_it
+    show-sql: true
+    database-platform: org.hibernate.dialect.PostgreSQL10Dialect
+  liquibase:
+    change-log: classpath:db/liquibase-integration-test-changelog.xml
+    rollback-file: target/rollback_componenttest.sql
+    parameters:
+      type.date_time: timestamp
+      default_date: now()
+      owner_name: customer_service_it
+      user_name: ${spring.datasource.username}
+
+  main:
+    banner-mode: off
+    allow-bean-definition-overriding: true
 
 # do not forget that the settings below happen only after the spring banner is (supposed to be) displayed
 # https://stackoverflow.com/q/53420179/2032694

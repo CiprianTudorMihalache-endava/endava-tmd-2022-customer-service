@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet author="Ciprian Mihalache" id="cl001_create_customer_table">
+        <createTable tableName="customer" catalogName="${owner_name}" schemaName="${owner_name}">
+            <column name="id" type="bigserial" autoIncrement="true">
+                <constraints nullable="false"/>
+            </column>
+            <column name="create_date_time" type="${type.date_time}" defaultValueDate="${default_date}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_update_date_time" type="${type.date_time}" defaultValueDate="${default_date}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="version" type="bigint" defaultValue="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="first_name" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_name" type="varchar(50)" />
+            <column name="date_of_birth" type="varchar(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="security_questions" type="jsonb">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <rollback>
+            <dropTable tableName="claims_document_metadata"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet author="Ciprian Mihalache" id="cl001_add_primary_key_to_customer_table">
+        <addPrimaryKey catalogName="${owner_name}" schemaName="${owner_name}" tableName="customer" columnNames="id" constraintName="customer_primary_key"/>
+        <rollback>
+            <dropPrimaryKey catalogName="${owner_name}" schemaName="${owner_name}" tableName="customer"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet author="Ciprian Mihalache" id="cl001_grant_permissions_on_customer_table" dbms="postgresql">
+        <sql>
+            GRANT select, insert, update ON ${owner_name}.customer TO ${user_name};
+        </sql>
+        <rollback>
+            <sql>
+                REVOKE select, insert, update ON ${owner_name}.customer FROM ${user_name};
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet author="Ciprian Mihalache" id="cl001_grant_permissions_on_customer_id_seq" dbms="postgresql">
+        <sql>
+            GRANT USAGE on ${owner_name}.customer_id_seq TO ${user_name};
+        </sql>
+        <rollback>
+            <sql>
+                REVOKE usage ON ${owner_name}.customer_id_seq FROM ${user_name};
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet author="Ciprian Mihalache" id="cl001_create_idx_customer_first_name">
+        <createIndex catalogName="${owner_name}" schemaName="${owner_name}" tableName="customer" unique="false" indexName="idx_customer_first_name">
+            <column name="first_name" />
+        </createIndex>
+        <rollback>
+            <dropIndex schemaName="${owner_name}" tableName="customer"
+                indexName="idx_customer_first_name" />
+        </rollback>
+    </changeSet>
+
+    <changeSet author="Ciprian Mihalache" id="cl001_tag_database">
+        <tagDatabase tag="version_1"/>
+    </changeSet>
+
+</databaseChangeLog>
