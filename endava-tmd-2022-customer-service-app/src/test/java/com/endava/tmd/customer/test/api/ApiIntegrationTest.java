@@ -9,14 +9,13 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 
 import com.endava.tmd.customer.swg.model.base.AdditionalInfo;
 import com.endava.tmd.customer.swg.model.base.ParentResponse;
-import com.endava.tmd.customer.test.util.IntegrationWebTest;
+import com.endava.tmd.customer.test.util.AbstractDataPersistenceTest;
 import com.endava.tmd.customer.test.util.TestConstants;
 
 import lombok.Getter;
 
 @Getter
-@IntegrationWebTest
-abstract class ApiIntegrationTest {
+abstract class ApiIntegrationTest extends AbstractDataPersistenceTest {
 
     // These test executions could be documented using spring-restdocs library
     // https://docs.spring.io/spring-restdocs/docs/current/reference/html5/
@@ -45,7 +44,9 @@ abstract class ApiIntegrationTest {
         assertThat(response.getTraceId()).isNotBlank();
         assertThat(response.getAdditionalInfo()).extracting(AdditionalInfo::getMessage)
                 .containsExactlyInAnyOrderElementsOf(expectedMessages);
-        assertThat(response.getResults()).containsExactlyInAnyOrderElementsOf(expectedResults);
+        assertThat(response.getResults())
+                .usingRecursiveFieldByFieldElementComparatorIgnoringFields("createDateTime", "lastUpdateDateTime")
+                .containsExactlyInAnyOrderElementsOf(expectedResults);
     }
 
 }

@@ -43,8 +43,8 @@ class RetrieveCustomerServiceTest {
     @Test
     void customerFound() {
         final var customer = CustomerMother.peterPan().setId(CUSTOMER_ID);
-        final var result = RetrieveCustomerResultMother.peterPan();
-        final var response = RetrieveCustomerResponseMother.peterPan();
+        final var result = RetrieveCustomerResultMother.jamesBond();
+        final var response = RetrieveCustomerResponseMother.jamesBond();
 
         when(storage.findById(CUSTOMER_ID)).thenReturn(Optional.of(customer));
         when(modelToResultConverter.convert(customer)).thenReturn(result);

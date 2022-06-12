@@ -45,7 +45,7 @@ class CustomerControllerTest {
     void successfullyRetrieveCustomer() {
         final var customerId = 123L;
         final var command = new RetrieveCustomerUseCase.RetrieveCustomerCommand(customerId);
-        final var response = RetrieveCustomerResponseMother.peterPan();
+        final var response = RetrieveCustomerResponseMother.jamesBond();
 
         when(retrieveCustomerUseCase.retrieve(command)).thenReturn(response);
 

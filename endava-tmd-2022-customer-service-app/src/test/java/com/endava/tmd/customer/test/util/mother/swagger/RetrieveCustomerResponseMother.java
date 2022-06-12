@@ -10,11 +10,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class RetrieveCustomerResponseMother {
 
-    public static RetrieveCustomerResponse peterPan() {
+    public static RetrieveCustomerResponse jamesBond() {
         return new RetrieveCustomerResponse()
                 .setBuildVersion(TestConstants.BUILD_VERSION)
                 .addAdditionalInfo(new AdditionalInfo().setMessage("Retrieve operation was successfully processed"))
-                .addResult(RetrieveCustomerResultMother.peterPan());
+                .addResult(RetrieveCustomerResultMother.jamesBond());
     }
 
 }

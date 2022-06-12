@@ -44,6 +44,13 @@
             <artifactId>dozer-spring-boot-starter</artifactId>
             <version>6.5.2</version>
         </dependency>
+        <!-- Allows to map various data types to a jsonb column -->
+        <!-- https://github.com/vladmihalcea/hibernate-types -->
+        <dependency>
+            <groupId>com.vladmihalcea</groupId>
+            <artifactId>hibernate-types-52</artifactId>
+            <version>2.16.2</version>
+        </dependency>
         <dependency>
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>

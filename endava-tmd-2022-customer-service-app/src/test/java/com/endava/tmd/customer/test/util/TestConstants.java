@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 public final class TestConstants {
 
     public static final String BUILD_VERSION = readVersionFromPom();
+    public static final long INITIAL_DB_RECORDS = 1;
 
     private static String readVersionFromPom() {
         try {

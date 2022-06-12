@@ -23,7 +23,7 @@
                 <constraints nullable="false"/>
             </column>
             <column name="last_name" type="varchar(50)" />
-            <column name="date_of_birth" type="varchar(10)">
+            <column name="date_of_birth" type="date">
                 <constraints nullable="false"/>
             </column>
             <column name="security_questions" type="jsonb">
@@ -31,7 +31,7 @@
             </column>
         </createTable>
         <rollback>
-            <dropTable tableName="claims_document_metadata"/>
+            <dropTable tableName="customer"/>
         </rollback>
     </changeSet>
 
