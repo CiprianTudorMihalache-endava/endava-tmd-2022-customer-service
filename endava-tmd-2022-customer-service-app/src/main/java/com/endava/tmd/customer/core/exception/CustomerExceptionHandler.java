@@ -1,6 +1,7 @@
 package com.endava.tmd.customer.core.exception;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.FAILED_DEPENDENCY;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
@@ -13,6 +14,7 @@ import javax.validation.ConstraintViolationException;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.core.NestedRuntimeException;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.ServletRequestBindingException;
@@ -90,6 +92,13 @@ public class CustomerExceptionHandler {
     @ExceptionHandler
     protected GenericResponse handle(final RetrieveCustomerException exception) {
         log.info("RetrieveCustomerException occured, with message: {}", exception.getMessage());
+        return responseFactory.build(exception.getMessage());
+    }
+
+    @ResponseStatus(FAILED_DEPENDENCY)
+    @ExceptionHandler
+    protected GenericResponse handle(final DataAccessException exception) {
+        log.error("Failure on database access: ", exception);
         return responseFactory.build(exception.getMessage());
     }
 

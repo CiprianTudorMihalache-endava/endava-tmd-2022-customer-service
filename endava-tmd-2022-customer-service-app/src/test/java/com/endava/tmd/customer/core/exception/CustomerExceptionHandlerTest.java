@@ -17,6 +17,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.MethodParameter;
+import org.springframework.dao.QueryTimeoutException;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindingResult;
@@ -95,6 +96,13 @@ class CustomerExceptionHandlerTest {
     @Test
     void illegalStateException() {
         final var exception = new IllegalStateException(MESSAGE);
+        when(responseFactory.build(MESSAGE)).thenReturn(RESPONSE);
+        assertThat(exceptionHandler.handle(exception)).isSameAs(RESPONSE);
+    }
+
+    @Test
+    void dataAccessException() {
+        final var exception = new QueryTimeoutException(MESSAGE);
         when(responseFactory.build(MESSAGE)).thenReturn(RESPONSE);
         assertThat(exceptionHandler.handle(exception)).isSameAs(RESPONSE);
     }

@@ -2,18 +2,26 @@ package com.endava.tmd.customer.test.api;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.reset;
 
 import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.datasource.lookup.DataSourceLookupFailureException;
 
+import com.endava.tmd.customer.adapter.out.db.CustomerRepository;
 import com.endava.tmd.customer.swg.model.RetrieveCustomerResponse;
 import com.endava.tmd.customer.test.util.mother.swagger.RetrieveCustomerResultMother;
 
 class RetrieveCustomerIT extends ApiIntegrationTest {
+
+    @SpyBean
+    private CustomerRepository customerRepositorySpy;
 
     @Test
     void retrieveExistentCustomer() {
@@ -41,6 +49,20 @@ class RetrieveCustomerIT extends ApiIntegrationTest {
         final var response = retrieveCustomer(-1);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         assertResponse(response.getBody(), "customerId fails constraint validation: must be greater than or equal to 1");
+    }
+
+    @Test
+    void dbFailureWhenTryingToRetrieveACustomer() throws Exception {
+        final var msg = "Mock exception message";
+
+        doThrow(new DataSourceLookupFailureException(msg)).when(customerRepositorySpy).findById(1L);
+
+        final var response = retrieveCustomer(1);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FAILED_DEPENDENCY);
+        assertResponse(response.getBody(), msg);
+
+        reset(customerRepositorySpy);
     }
 
     private ResponseEntity<RetrieveCustomerResponse> retrieveCustomer(final long customerId) {
