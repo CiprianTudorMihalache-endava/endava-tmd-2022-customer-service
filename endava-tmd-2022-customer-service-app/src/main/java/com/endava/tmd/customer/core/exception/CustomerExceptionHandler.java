@@ -88,6 +88,13 @@ public class CustomerExceptionHandler {
         return responseFactory.build("Constraint Violation");
     }
 
+    @ResponseStatus(BAD_REQUEST)
+    @ExceptionHandler
+    public GenericResponse handle(final ExternalServiceCallBadRequestException exception) {
+        log.info("Validation problem while calling external service", exception);
+        return responseFactory.build(exception.getMessage());
+    }
+
     @ResponseStatus(NOT_FOUND)
     @ExceptionHandler
     protected GenericResponse handle(final RetrieveCustomerException exception) {
@@ -98,7 +105,14 @@ public class CustomerExceptionHandler {
     @ResponseStatus(FAILED_DEPENDENCY)
     @ExceptionHandler
     protected GenericResponse handle(final DataAccessException exception) {
-        log.error("Failure on database access: ", exception);
+        log.error("Failure on database access", exception);
+        return responseFactory.build(exception.getMessage());
+    }
+
+    @ResponseStatus(FAILED_DEPENDENCY)
+    @ExceptionHandler
+    protected GenericResponse handle(final ExternalServiceCallGenericException exception) {
+        log.error("Failure while calling external service", exception);
         return responseFactory.build(exception.getMessage());
     }
 

@@ -9,11 +9,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.endava.tmd.customer.core.converter.CreateCustomerRequestToCustomerConverter;
 import com.endava.tmd.customer.core.factory.ResponseFactory;
 import com.endava.tmd.customer.core.port.in.CreateCustomerUseCase.CreateCustomerCommand;
+import com.endava.tmd.customer.core.port.out.CommunicationsApp;
 import com.endava.tmd.customer.core.port.out.CustomerStorage;
 import com.endava.tmd.customer.test.util.mother.model.CustomerMother;
 import com.endava.tmd.customer.test.util.mother.swagger.CreateCustomerRequestMother;
@@ -27,6 +29,9 @@ class CreateCustomerServiceTest {
 
     @Mock
     private CustomerStorage storage;
+
+    @Mock
+    private CommunicationsApp communicationsApp;
 
     @Mock
     private ResponseFactory responseFactory;
@@ -43,12 +48,16 @@ class CreateCustomerServiceTest {
         final var response = CreateCustomerResponseMother.create(customerId);
 
         when(requestToModelConverter.convert(request)).thenReturn(customer);
-        when(storage.save(customer)).thenReturn(savedCustomer);
+        when(storage.saveAndFlush(customer)).thenReturn(savedCustomer);
         when(responseFactory.build(any(), eq(response.getAdditionalInfo().get(0).getMessage()), eq(response.getResults().get(0))))
                 .thenReturn(response);
 
         final var actualResponse = service.create(new CreateCustomerCommand(request));
         assertThat(actualResponse).isSameAs(response);
+
+        final var orderVerifier = Mockito.inOrder(storage, communicationsApp);
+        orderVerifier.verify(storage).saveAndFlush(customer);
+        orderVerifier.verify(communicationsApp).reportNewCustomer(customer);
     }
 
 }

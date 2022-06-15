@@ -29,9 +29,9 @@ class CustomerDbStorageServiceTest {
         final var initialCustomer = CustomerMother.peterPan();
         final var savedCustomer = CustomerMother.peterPanPersisted(12L, 0L);
 
-        when(repository.save(initialCustomer)).thenReturn(savedCustomer);
+        when(repository.saveAndFlush(initialCustomer)).thenReturn(savedCustomer);
 
-        assertThat(service.save(initialCustomer)).isSameAs(savedCustomer);
+        assertThat(service.saveAndFlush(initialCustomer)).isSameAs(savedCustomer);
     }
 
     @Test

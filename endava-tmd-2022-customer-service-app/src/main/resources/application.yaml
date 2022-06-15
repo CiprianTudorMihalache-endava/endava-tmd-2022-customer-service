@@ -80,3 +80,43 @@ springdoc:
   group-configs:
     - group: customer
       paths-to-match: /v1/**
+
+feign:
+  client:
+    config:
+      comms-client:
+        connectTimeout: 30000
+        readTimeout: 60000
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      comms-client-circuit-breaker:
+        failureRateThreshold: 5
+        minimumNumberOfCalls: 7
+        permittedNumberOfCallsInHalfOpenState: 3
+        record-exceptions:
+          - feign.RetryableException
+        slidingWindowSize: 10
+        slidingWindowType: COUNT_BASED
+        waitDurationInOpenState: 30s
+  retry:
+    instances:
+      comms-client-retry:
+        enableExponentialBackoff: true
+        exponentialBackoffMultiplier: 2
+        retryExceptions:
+          - feign.RetryableException
+        maxAttempts: 3
+        waitDuration: 5s
+
+customer:
+  client:
+    comms-service:
+      host: https://mycompanyserver.com
+      path: /communications-service
+      endpoint:
+        report-new-customer: /v1/report-new-customer
+      basic-authentication:
+        username: ${COMMS_AUTH_USER:user}
+        password: ${COMMS_AUTH_PASSWORD:pass}

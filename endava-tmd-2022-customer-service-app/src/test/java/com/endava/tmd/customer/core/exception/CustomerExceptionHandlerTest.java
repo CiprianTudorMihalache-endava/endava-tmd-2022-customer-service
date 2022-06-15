@@ -87,6 +87,13 @@ class CustomerExceptionHandlerTest {
     }
 
     @Test
+    void externalServiceCallBadRequestException() {
+        final var exception = new ExternalServiceCallBadRequestException(MESSAGE);
+        when(responseFactory.build(MESSAGE)).thenReturn(RESPONSE);
+        assertThat(exceptionHandler.badRequestExceptions(exception)).isSameAs(RESPONSE);
+    }
+
+    @Test
     void retrieveCustomerException() {
         final var exception = new RetrieveCustomerException(123L);
         when(responseFactory.build(exception.getMessage())).thenReturn(RESPONSE);
@@ -105,6 +112,13 @@ class CustomerExceptionHandlerTest {
         final var exception = new QueryTimeoutException(MESSAGE);
         when(responseFactory.build(MESSAGE)).thenReturn(RESPONSE);
         assertThat(exceptionHandler.handle(exception)).isSameAs(RESPONSE);
+    }
+
+    @Test
+    void externalServiceCallGenericException() {
+        final var exception = new ExternalServiceCallGenericException(MESSAGE);
+        when(responseFactory.build(MESSAGE)).thenReturn(RESPONSE);
+        assertThat(exceptionHandler.badRequestExceptions(exception)).isSameAs(RESPONSE);
     }
 
     // of course we should add at least one test for each exception type defined in the handler

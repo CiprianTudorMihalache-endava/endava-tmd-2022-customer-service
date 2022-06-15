@@ -25,6 +25,7 @@ class ArchitectureTest {
                 .applicationServices("com.endava.tmd.customer.core..")
                 .adapter("controller", "..adapter.in.web..")
                 .adapter("database", "..adapter.out.db..")
+                .adapter("communicationsApplication", "..adapter.out.communications..")
                 .withOptionalLayers(true) // Otherwise onionArchitecture() requires a domainServices() layer
                 .check(javaClasses);
     }

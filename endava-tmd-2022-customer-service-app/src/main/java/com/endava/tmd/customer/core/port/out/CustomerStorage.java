@@ -6,7 +6,7 @@ import com.endava.tmd.customer.model.Customer;
 
 public interface CustomerStorage {
 
-    Customer save(Customer customer);
+    Customer saveAndFlush(Customer customer);
 
     Optional<Customer> findById(Long customerId);
 

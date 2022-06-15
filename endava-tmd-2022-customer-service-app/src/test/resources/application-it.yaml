@@ -38,3 +38,11 @@ application:
   contact-name: myCompany
   contact-url: https://www.myCompany.com
   contact-mail: developer@myCompany.com
+
+customer:
+  client:
+    comms-service:
+      host: http://localhost:${wiremock.server.port:8080}
+      basic-authentication:
+        username: testUser
+        password: testPass

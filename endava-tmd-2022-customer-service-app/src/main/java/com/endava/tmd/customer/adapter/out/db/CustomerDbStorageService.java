@@ -15,8 +15,8 @@ public class CustomerDbStorageService implements CustomerStorage {
     private final CustomerRepository repository;
 
     @Override
-    public Customer save(final Customer customer) {
-        return repository.save(customer);
+    public Customer saveAndFlush(final Customer customer) {
+        return repository.saveAndFlush(customer);
     }
 
     @Override
